@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  font-family: "Outfit","sens-serif";
+}
+
+::-webkit-scrollbar{
+  display: none;
+}
+
+.body {
+  background: linear-gradient(145deg,  #4d4c4c,#161616);
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+  color: rgb(255, 255, 255);
+  font-size: 30px;
+}
