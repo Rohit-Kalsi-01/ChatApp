@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import assets from "../assets/assets"
 import { AuthContext } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+
 import { useContext } from "react";
 
-
+import { useNavigate } from "react-router-dom"
 
 
 
@@ -15,14 +15,10 @@ export const LoginPage=()=>{
     const[password,setPassword]=useState("");
     const[bio,setBio]=useState("");
     const[isDataSubmitted,setIsDataSubmitted]=useState(false);
+      const navigate = useNavigate();
+    const { authUser } = useContext(AuthContext);
 
     const{login} =useContext(AuthContext);
-    const navigate=useNavigate();
-   
-
-    
-
-
     const onsubmithandler=(e)=>{
         e.preventDefault();
 
@@ -31,11 +27,15 @@ export const LoginPage=()=>{
             return;
         }
         login(currState==="Sign up" ? "signup" : "login", {fullname, email, password, bio});
+    }
 
-        if(res?.success){
+    useEffect(() => {
+        if (authUser) {
             navigate("/");
         }
-    }
+    },[authUser,navigate])
+
+    
     return(
         <div className="min-h-screen bg-cover bg-center flex items-center justify-center gap-8 
         sm:justify-evenly max-sm:flex-col backdrop-blur-2xl">
@@ -101,6 +101,7 @@ export const LoginPage=()=>{
              </div>
 
            </form>
+           
         </div>
     )
 }

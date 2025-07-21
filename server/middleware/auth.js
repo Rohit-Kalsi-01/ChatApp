@@ -1,6 +1,7 @@
  //Middleware to protect routes
 
 import User from "../modules/user.js";
+import jwt from 'jsonwebtoken';
 
  export const protectRoute=async (req, res, next) => {
     try {

@@ -4,6 +4,9 @@ import toast  from "react-hot-toast";
 import { useEffect } from "react";
 import {io} from "socket.io-client";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -17,6 +20,8 @@ export const AuthProvider = ({ children }) => {
      const[authUser,setAuthUser]=useState(null);
       const[onlineuser,setOnlineuser]=useState([]);
       const[socket,setSocket]=useState(null);
+       const navigate=useNavigate();
+
 
     const checkauth=async()=>{
         try {
@@ -41,11 +46,13 @@ export const AuthProvider = ({ children }) => {
                 setToken(data.token);
                 localStorage.setItem("token",data.token);
                 toast.success(data.message);
+                navigate("/");
             }
             else{
                 toast.error(data.message);
             }
-            return data;
+            
+          
         } catch (error) {
             toast.error(error.message);
         }
@@ -61,11 +68,12 @@ export const AuthProvider = ({ children }) => {
             socket.disconnect();
          }
     //Update user function to handle user profile updates
-     const updateProfilr=async(body)=>{
+     const updateProfile=async(bodddy)=>{
          try {
-            const {data}=await axios.put("/api/auth/update-profile",body);
+            const {data}=await axios.put("/api/auth/update-profile",bodddy);
             if(data.success){
                 setAuthUser(data.user);
+                  localStorage.setItem("authUser", JSON.stringify(data.user));
                 toast.success("Profile Updated Successfully");
             }
          } catch (error) {
@@ -97,6 +105,7 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common["token"]=token;
         }
         checkauth();
+        
     },[])
 
     const value={
@@ -106,7 +115,7 @@ export const AuthProvider = ({ children }) => {
       socket,
       login,
       logout,
-      updateProfilr
+      updateProfile
 
     }
     return (

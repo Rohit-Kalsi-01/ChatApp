@@ -1,17 +1,33 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import assets from "../assets/assets";
+import { AuthContext } from "../../context/AuthContext";
 
 export const ProfilePage=()=>{
 
+    const {authUser, updateProfile}=useContext(AuthContext);
+
     const[selectedImage,setSelectedImage]=useState(null);
     const navigate=useNavigate();
-    const[name,setName]=useState("martin Johnson")
-    const[bio,setBio]=useState("HI everyone i am using Quickchat")
+    const[fullname,setName]=useState(authUser.fullname)
+    const[bio,setBio]=useState(authUser.bio)
 
      const handlesubmit=async(e)=>{
         e.preventDefault();
-        navigate('/')
+        if(!selectedImage){
+            await  updateProfile({fullname,bio});
+              navigate('/');
+              return;
+        }
+        const  reader=new FileReader();
+        reader.readAsDataURL(selectedImage);
+        reader.onload=async()=>{
+            const base64Image=reader.result;
+            await  updateProfile({profilePic:base64Image,fullname,bio});
+            navigate('/');
+        }
+      
+
      }
 
     return(
@@ -27,12 +43,12 @@ export const ProfilePage=()=>{
                          alt="" className={`w-12 h-12 ${selectedImage&&'rounded-full'}`}/>
                          upload file image
                     </label>
-                    <input  onChange={(e)=>setName(e.target.value)} value={name}
+                    <input  onChange={(e)=>setName(e.target.value)} value={fullname}
                     type="text" required placeholder="Your name"  className="p-2 border
                     border-gray-500 rounded-md focus:outline-none focus:ring-2 
                     focus:ring-violet-500 text-black
                     " />
-                    <textarea onChange={(e)=>setBio(e.target.bio )} value={bio}
+                    <textarea onChange={(e)=>setBio(e.target.value )} value={bio}
                     placeholder="Write profile bio" required className="p-2 border
                     border-gray-500 rounded-md focus:outline-none focus:ring-2 
                     focus:ring-violet-500 text-black" rows={4}></textarea>
@@ -41,8 +57,8 @@ export const ProfilePage=()=>{
                     to-violet-600 text-white p-2 rounded-full text-lg cursor-pointer">Save</button>
                 </form>
                 
-                <img className="max-w-44 aspect-square rounded-full mx-10
-                max-sm:mt-10" src={assets.logo_icon} alt="" />
+                <img className={`max-w-44 aspect-square rounded-full mx-10
+                max-sm:mt-10  ${selectedImage &&'rounded-full'}`} src={authUser?.profilePic||assets.logo_icon} alt="" />
             </div>
         </div>
     )

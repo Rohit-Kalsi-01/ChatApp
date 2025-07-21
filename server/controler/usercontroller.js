@@ -3,6 +3,7 @@ import { generateToken } from "../lb/util.js";
 import User from "../modules/user.js";
 import bcrypt from "bcryptjs";
 
+
 export const signup = async (req, res) => {
    const { fullname , email , password , bio }  = req.body;
    
@@ -54,7 +55,8 @@ export const login = async (req, res) => {
 
         res.json({success: true, user, token, message: "User logged in successfully"});
        
-        return res.data;
+        
+       
     } catch (error) {
         console.log(error);
         
@@ -72,22 +74,22 @@ export const checkAuth = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
     try {
-        const{profilepic, fullname, bio,email} = req.body;
+        const{profilePic, fullname, bio} = req.body;
         const userId = req.user._id;
 
         let updatedUser;
 
-        if(!profilepic){
-            await User.findByIdAndUpdate(userId,{bio,fullname},{bio,fullname},{new:true});
+        if(!profilePic){
+          updatedUser= await User.findByIdAndUpdate(userId,{fullname,bio},{new:true});
         }else{
-            const uploadf=await cloudinary.uploader.upload(profilepic);
+            const uploadf=await cloudinary.uploader.upload(profilePic);
             updatedUser = await User.findByIdAndUpdate(userId, {profilePic:uploadf.secure_url, fullname, bio}, {new: true});
         }
 
-        res.json({success: true, user: updatedUser});
+        res.json({success: true, user: updatedUser,message: "profile updated successfully"});
     } catch (error) {
         console.log(error.message);
-          res.json({success: true, user: updatedUser});
+          res.status(500).json({success:false, message: "Error updating profile"});
         
     }
 }

@@ -10,6 +10,7 @@ import { Server } from "socket.io";
 
 
 
+
 //Create Express app and HTTP server
 const app=exprees();
 const server=http.createServer(app);
@@ -48,11 +49,11 @@ app.use(cors());
 //Routes setup
 app.use("/api/status",(req,res)=>res.send("Server is live"));
 app.use("/api/auth",userRouter);
-app.use("/api/auth",messageRouter);
+app.use("/api/messages",messageRouter);
 
 //Connect to MongoDB
 await connectDb();
 
 const PORT=process.env.PORT||5000;
 
-app.listen(PORT,()=>console.log("server is running on port"+PORT))
+server.listen(PORT,()=>console.log("server is running on port"+PORT))
