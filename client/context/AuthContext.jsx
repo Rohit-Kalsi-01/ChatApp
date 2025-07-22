@@ -17,7 +17,7 @@ export const AuthContext=createContext();
 export const AuthProvider = ({ children }) => {
 
      const[token,setToken]=useState(localStorage.getItem("token") );
-     const[authUser,setAuthUser]=useState(null);
+     const[authUser,setAuthUser]=useState( JSON.parse(localStorage.getItem("authUser")) || null);
       const[onlineuser,setOnlineuser]=useState([]);
       const[socket,setSocket]=useState(null);
        const navigate=useNavigate();
