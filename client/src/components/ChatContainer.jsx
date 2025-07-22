@@ -5,7 +5,7 @@ import { formatMessageTime } from "../lib/utils"
 export const ChatContainer=({selectedUser,setSelectedUser})=>{
 
   const scrollEnd=useRef()
-
+// 
   useEffect(()=>{
      if (scrollEnd.current) {
     scrollEnd.current.scrollIntoView({ behavior: "smooth" });
